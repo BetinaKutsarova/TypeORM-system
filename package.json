@@ -1,0 +1,23 @@
+{
+  "name": "typeorm-system",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx tsc && node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BetinaKutsarova/TypeORM-system.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BetinaKutsarova/TypeORM-system/issues"
+  },
+  "homepage": "https://github.com/BetinaKutsarova/TypeORM-system#readme",
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}
