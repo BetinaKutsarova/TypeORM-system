@@ -12,7 +12,8 @@ async function setupAdmin() {
     const adminUser = await db.create({
         name: "Admin",
         email: "admin@example.com",
-        role: UserRole.ADMIN
+        role: UserRole.ADMIN,
+        isBanned: false
     });
 
     db.currentUser = adminUser;
@@ -29,9 +30,10 @@ async function example() {
         // USER CRUD
         console.log("\n1. Creating new user...");
         const newUser = await db.create({
-            name: "User",
+            name: "Ivan",
             email: "user@example.com",
-            role: UserRole.USER
+            role: UserRole.USER,
+            isBanned: false
         });
         console.log("Created user:", newUser.name);
 
@@ -40,34 +42,45 @@ async function example() {
         const found = await db.findById(newUser.id);
         console.log("Found user:", found);
 
+        // Try to ban an existing user
+        console.log("\n3. Attempting to ban existing user...");
+        const banResult = await db.banUser(newUser.id);
+        console.log("Valid user ban attempt:", banResult);
+
+        // Try to ban a non-existent user
+        console.log("\n4. Attempting to ban non-existent user...");
+        const invalidBanResult = await db.banUser("invalidUser");
+        console.log("Invalid user ban attempt:", invalidBanResult);
+
         // Update user
-        console.log("\n3. Updating user name...");
+        console.log("\n5. Updating user name...");
         const updatedUser = await db.update(newUser.id, { name: "John Smith" });
         console.log("Updated user:", updatedUser);
 
         // Delete user
-        console.log("\n4. Deleting user...");
+        console.log("\n6. Deleting user...");
         const deleted = await db.delete(newUser.id);
         console.log("User deleted:", deleted);
 
         // Try to find deleted user
-        console.log("\n5. Trying to find deleted user...");
+        console.log("\n7. Trying to find deleted user...");
         const shouldBeUndefined = await db.findById(newUser.id);
         console.log("Result after deletion:", shouldBeUndefined);
 
         // POST AND COMMENT CRUD
 
         // create user that would post and comment
-        console.log("\n6. Creating new user for post and comment...");
+        console.log("\n8. Creating new user for post and comment...");
         const postCommentUser = await db.create({
             name: "John Doe",
             email: "john@example.com",
-            role: UserRole.USER
+            role: UserRole.USER,
+            isBanned: false
         });
         console.log("Created user:", postCommentUser);
 
         // Create post by user
-        console.log("\n7. Creating new post...");
+        console.log("\n9. Creating new post...");
         const newPost = await postDb.create({
             title: "My First Post",
             content: "Hello, this is my first post!",
@@ -76,7 +89,7 @@ async function example() {
         console.log("Created post:", newPost);
 
         // Create comment on this post
-        console.log("\n8. Creating new comment...");
+        console.log("\n10. Creating new comment...");
         const newComment = await commentDb.create({
             content: "This is a comment on my own post!",
             authorId: postCommentUser.id,
@@ -85,13 +98,13 @@ async function example() {
         console.log("Created comment:", newComment);
 
         // Find post
-        console.log("\n9. Finding post by ID...");
+        console.log("\n11. Finding post by ID...");
         const foundPost = await postDb.findById(newPost.id);
         console.log("Found post:", foundPost);
 
         // Update post
         if (foundPost) {
-            console.log("\n10. Updating post title...");
+            console.log("\n12. Updating post title...");
             const updatedPost = await postDb.update(foundPost.id, { 
                 title: "My Updated Post Title" 
             });
@@ -99,13 +112,13 @@ async function example() {
         }
 
         // Find comment
-        console.log("\n11. Finding comment by ID...");
+        console.log("\n13. Finding comment by ID...");
         const foundComment = await commentDb.findById(newComment.id);
         console.log("Found comment:", foundComment);
 
         // Update comment
         if (foundComment) {
-            console.log("\n12. Updating comment content...");
+            console.log("\n14. Updating comment content...");
             const updatedComment = await commentDb.update(foundComment.id, {
                 content: "This is my updated comment!"
             });

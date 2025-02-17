@@ -51,6 +51,40 @@ class Database<T extends BaseEntity> {
     async delete(id: string): Promise<boolean> {
         return this.items.delete(id);
     }
+
+    @log
+    @requireRole(UserRole.ADMIN)
+    async banUser(userId: string): Promise<{ success: boolean; message: string }> {
+        const user = await this.findById(userId);
+        
+        if (!user) {
+            return { 
+                success: false, 
+                message: `User with ID ${userId} not found` 
+            };
+        }
+
+        // You can't ban other admins
+        if ((user as any).role === UserRole.ADMIN) {
+            return { 
+                success: false, 
+                message: "Cannot ban admin users" 
+            };
+        }
+
+        // Add banned status
+        const bannedUser = await this.update(userId, {
+            ...user,
+            isBanned: true,
+        });
+
+        return { 
+            success: true, 
+            message: `User ${(bannedUser as any).name} has been banned` 
+        };
+    }
+
+
 }
 
 export { Database };

@@ -10,6 +10,7 @@ interface IUser {
     name: string;
     email: string;
     role: UserRole;
+    isBanned?: boolean;
 }
 
 export { UserRole, IUser };
