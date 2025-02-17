@@ -1,10 +1,10 @@
 import { UserRole } from '../types/user';
 
-function log(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+function log(target: any, propertyKey: string, descriptor: PropertyDescriptor) { // wrap methods with extra logging functionality
     const originalMethod = descriptor.value;
-    descriptor.value = function(...args: any[]) {
+    descriptor.value =  async function(...args: any[]) {
         console.log(`Calling ${propertyKey} with arguments:`, args);
-        const result = originalMethod.apply(this, args);
+        const result =  await originalMethod.apply(this, args);
         console.log(`Method ${propertyKey} returned:`, result);
         return result;
     };

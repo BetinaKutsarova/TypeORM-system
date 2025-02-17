@@ -47,6 +47,15 @@ async function example() {
     }
 }
 
-// Run the example
+// Run
+(async () => {
+    console.log("Starting example...\n");
+    try {
+        await example();
+        console.log("\nExample completed!");
+    } catch (error) {
+        console.error("Error running example:", error);
+    }
+})();
+
 console.log("Starting example...\n");
-example();
