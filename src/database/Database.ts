@@ -3,6 +3,10 @@ import { log, requireRole } from '../decorators';
 import { UserRole } from '../types/user';
 import { User } from '../models/User';
 
+function validateName(name: string): boolean {
+    return name.length >= 2 && name.length <= 50;
+}
+
 class Database<T extends BaseEntity> {
     private items: Map<string, T>;
     private cache: WeakMap<object, T>;
@@ -15,6 +19,12 @@ class Database<T extends BaseEntity> {
 
     @log
     async create(item: Omit<T, keyof BaseEntity>): Promise<T> {
+        if ('name' in item) {
+            if (!validateName(item.name as string)) {
+                throw new Error('Name must be between 2 and 50 characters');
+            }
+        }
+
         const newItem = {
             ...item,
             id: crypto.randomUUID(),
@@ -35,6 +45,12 @@ class Database<T extends BaseEntity> {
     async update(id: string, data: Partial<T>): Promise<T | undefined> {
         const item = this.items.get(id);
         if (!item) return undefined;
+
+        if ('name' in data) {
+            if (!validateName(data.name as string)) {
+                throw new Error('Name must be between 2 and 50 characters');
+            }
+        }
 
         const updatedItem = {
             ...item,
