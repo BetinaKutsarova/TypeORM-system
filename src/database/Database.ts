@@ -70,7 +70,7 @@ class Database<T extends BaseEntity> {
 
     @log
     @requireRole(UserRole.ADMIN)
-    async banUser(userId: string): Promise<{ success: boolean; message: string }> {
+    async toggleBanStatus(userId: string): Promise<{ success: boolean; message: string }> {
         const user = await this.findById(userId);
         
         if (!user) {
@@ -88,15 +88,17 @@ class Database<T extends BaseEntity> {
             };
         }
 
-        // Add banned status
+        const isBanned = !(user as any).isBanned;
+
+        // toggle banned status
         const bannedUser = await this.update(userId, {
             ...user,
-            isBanned: true,
+            isBanned: isBanned,
         });
 
         return { 
             success: true, 
-            message: `User ${(bannedUser as any).name} has been banned` 
+            message: `Ban status for ${(bannedUser as any).name} has been updated` 
         };
     }
 

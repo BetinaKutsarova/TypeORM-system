@@ -55,11 +55,15 @@ async function example() {
 
         // Try to ban an existing user
         console.log("\n3. Attempting to ban existing user");
-        const banResult = await db.banUser(newUser.id);
+        const banResult = await db.toggleBanStatus(newUser.id);
+
+        // Try to unban user
+        console.log("\n3.1 Attempting to unban existing user");
+        const unbanResult = await db.toggleBanStatus(newUser.id);
 
         // Try to ban a non-existent user
         console.log("\n4. Attempting to ban non-existent user");
-        const invalidBanResult = await db.banUser("invalidUser");
+        const invalidBanResult = await db.toggleBanStatus("invalidUser");
 
         // Update user
         console.log("\n5. Updating user name");
